@@ -33,8 +33,69 @@ const ImputationSettings: React.FC<ImputationSettingsProps> = ({ control, column
         </div>
       ) : (
         <div className="space-y-6">
+          {/* Delete Null Rows Option */}
+          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+            <div className="flex items-center justify-between mb-2">
+              <div>
+                <h4 className="text-md font-medium text-yellow-900">Handle Missing Values</h4>
+                <p className="text-sm text-yellow-700">Choose how to handle rows with missing values</p>
+              </div>
+            </div>
+            
+            <div className="space-y-3">
+              <Controller
+                name="imputation.delete_null_rows"
+                control={control}
+                render={({ field }) => (
+                  <label className="flex items-center space-x-3 cursor-pointer">
+                    <input
+                      type="radio"
+                      checked={field.value === true}
+                      onChange={() => field.onChange(true)}
+                      className="w-4 h-4 text-yellow-600 border-gray-300 focus:ring-yellow-500"
+                    />
+                    <div>
+                      <div className="font-medium text-yellow-900">Delete rows with missing values</div>
+                      <div className="text-sm text-yellow-700">Remove all rows that contain any null/empty values</div>
+                    </div>
+                  </label>
+                )}
+              />
+              
+              <Controller
+                name="imputation.delete_null_rows"
+                control={control}
+                render={({ field }) => (
+                  <label className="flex items-center space-x-3 cursor-pointer">
+                    <input
+                      type="radio"
+                      checked={field.value !== true}
+                      onChange={() => field.onChange(false)}
+                      className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                    />
+                    <div>
+                      <div className="font-medium text-gray-900">Impute missing values</div>
+                      <div className="text-sm text-gray-600">Fill missing values using statistical methods</div>
+                    </div>
+                  </label>
+                )}
+              />
+            </div>
+          </div>
+
           {/* Global Method Selection */}
-          <div>
+          <Controller
+            name="imputation.delete_null_rows"
+            control={control}
+            render={({ field }) => (
+              !field.value && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="space-y-6"
+                >
+                  <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Default Imputation Method
             </label>
@@ -55,6 +116,7 @@ const ImputationSettings: React.FC<ImputationSettingsProps> = ({ control, column
               {imputationMethod === 'knn' && 'Use similar rows to predict missing values'}
             </p>
           </div>
+                  </div>
 
           {/* KNN Neighbors Setting */}
           {imputationMethod === 'knn' && (
@@ -134,6 +196,10 @@ const ImputationSettings: React.FC<ImputationSettingsProps> = ({ control, column
             </div>
           </div>
         </div>
+                </motion.div>
+              )
+            )}
+          />
       )}
     </motion.div>
   )
